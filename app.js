@@ -1,6 +1,4 @@
-
-
-
+const startBtn = document.getElementById("start-btn")
 const widthForm = document.getElementById("width")
 const bombForm = document.getElementById("bombs")
 const updateBtn = document.getElementById('update')
@@ -8,6 +6,7 @@ const grid = document.getElementById('grid')
 let width = 20
 let bombs = 20
 const divs = []
+let bombsPlaced = false
 
 updateBtn.addEventListener("click",()=>{
   let w = (widthForm.value)
@@ -30,10 +29,18 @@ updateBtn.addEventListener("click",()=>{
   createBoard()
 })
 
+startBtn.addEventListener("click",()=>{
+  createBoard()
+  console.log("HI")
+})
+
 function createBoard(){
   removeAllChildNodes(grid)
   for(let i=0;i<(width*width);i++){
     const place = document.createElement('div')
+    place.addEventListener("click",()=>{
+      console.log("YO")
+    })
     divs.push(place)
     grid.appendChild(place)
   }
@@ -44,3 +51,5 @@ function removeAllChildNodes(parent) {
       parent.removeChild(parent.firstChild);
   }
 }
+
+
