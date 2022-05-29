@@ -39,11 +39,39 @@ function createBoard(){
   for(let i=0;i<(width*width);i++){
     const place = document.createElement('div')
     place.addEventListener("click",()=>{
-      console.log("YO")
+      clicked(place)
+    })
+    place.addEventListener('contextmenu', e=>{
+      e.preventDefault()
+      flag(place)
     })
     divs.push(place)
     grid.appendChild(place)
   }
+}
+
+function clicked(place){
+  if (bombsPlaced==false){
+    placeBombs(place)
+  }
+}
+
+function placeBombs(place){
+   
+}
+
+function getNeighbors(place){
+
+}
+
+function flag(place){
+  if(place.innerHTML=='🚩'){
+    place.innerHTML='';
+  }
+  else{
+    place.innerHTML ='🚩'
+  }
+  
 }
 
 function removeAllChildNodes(parent) {
