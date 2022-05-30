@@ -31,13 +31,14 @@ updateBtn.addEventListener("click",()=>{
 
 startBtn.addEventListener("click",()=>{
   createBoard()
-  console.log("HI")
 })
 
 function createBoard(){
   removeAllChildNodes(grid)
+  bombsPlaced = false
   for(let i=0;i<(width*width);i++){
     const place = document.createElement('div')
+    place.setAttribute("num", i)
     place.addEventListener("click",()=>{
       clicked(place)
     })
@@ -53,14 +54,63 @@ function createBoard(){
 function clicked(place){
   if (bombsPlaced==false){
     placeBombs(place)
+    bombsPlaced = true
+    setNumbers()
   }
 }
 
 function placeBombs(place){
+   cache = getNeighbors(place)
+   cache.add(place)
+   for(let i=0;i<bombs;i++){
+     let temp = divs[Math.floor(Math.random()*divs.length)]
+     while(cache.has(temp)){
+      temp = divs[Math.floor(Math.random()*divs.length)]
+     }
+     temp.classList.add("bomb")
+     cache.add(temp)
+   }
    
 }
 
 function getNeighbors(place){
+  const cache = new Set()
+  const num = parseInt(place.getAttribute("num"))
+  
+  if(num>=width){
+    if((num%width)!=0){
+      cache.add(divs[num-width-1]) 
+      
+    }
+
+    cache.add(divs[num-width])
+    
+    if(((num+1)%width)!=0){
+      
+      cache.add(divs[num-width+1])
+      
+    }
+  }
+  if(num%width!=0){
+    cache.add(divs[num-1])
+    
+  }
+  if(((num+1)%width)!=0){
+    cache.add(divs[num+1])
+    
+  }
+  if(num<(width*width)-width){
+    if(num%width!=0){
+      cache.add(divs[num+width-1])
+    }
+    cache.add(divs[num+width])
+    if(((num+1)%width)!=0){
+      cache.add(divs[num+width+1])
+    }
+  }
+  return cache
+  
+  
 
 }
 
@@ -80,4 +130,6 @@ function removeAllChildNodes(parent) {
   }
 }
 
+function setNumbers(){
 
+}
