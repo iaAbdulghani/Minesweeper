@@ -7,6 +7,7 @@ let width = 20
 let bombs = 20
 const divs = []
 let bombsPlaced = false
+let gameOver = false
 
 updateBtn.addEventListener("click",()=>{
   let w = (widthForm.value)
@@ -31,6 +32,7 @@ updateBtn.addEventListener("click",()=>{
 
 startBtn.addEventListener("click",()=>{
   createBoard()
+  gameOver = false
 })
 
 function createBoard(){
@@ -52,22 +54,49 @@ function createBoard(){
 }
 
 function clicked(place){
+  if(gameOver){
+    return
+  }
   if (bombsPlaced==false){
     placeBombs(place)
     bombsPlaced = true
     setNumbers()
   }
+  if(place.innerHTML!="🚩"){
+    if(place.classList.contains("bomb")){
+      alert("Game Over")
+      gameOver = true
+    }
+    else{
+      let around = place.getAttribute("neighbors")
+      console.log(around)
+      place.innerHTML = around
+      if (around=="0"){
+        let hold = getNeighbors(place)
+        hold.forEach(neighbor=>{
+          if(neighbor.innerHTML==''){
+            clicked(neighbor)
+          }
+          
+        })
+      }
+    }
+  }
+  console.log(grid)
 }
 
 function placeBombs(place){
    cache = getNeighbors(place)
    cache.add(place)
+   console.log(bombs)
    for(let i=0;i<bombs;i++){
+     
      let temp = divs[Math.floor(Math.random()*divs.length)]
      while(cache.has(temp)){
       temp = divs[Math.floor(Math.random()*divs.length)]
      }
      temp.classList.add("bomb")
+     
      cache.add(temp)
    }
    
@@ -118,7 +147,7 @@ function flag(place){
   if(place.innerHTML=='🚩'){
     place.innerHTML='';
   }
-  else{
+  else if(place.innerHTML==''){
     place.innerHTML ='🚩'
   }
   
@@ -131,5 +160,21 @@ function removeAllChildNodes(parent) {
 }
 
 function setNumbers(){
+  
+  for(let i=0;i<divs.length;i++){
+    const curr = divs[i]
+    neighbors = getNeighbors(curr)
+    count = 0
+    console.log(neighbors)
+    neighbors.forEach(neighbor=>{
+      if (neighbor.classList.contains("bomb")){
+        count+=1
+      }
+    })
+    curr.setAttribute("neighbors",count)
 
+    
+
+    
+  }
 }
