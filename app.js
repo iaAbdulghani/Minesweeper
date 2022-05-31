@@ -4,8 +4,8 @@ const bombForm = document.getElementById("bombs")
 const updateBtn = document.getElementById('update')
 const grid = document.getElementById('grid')
 let width = 20
-let bombs = 20
-const divs = []
+let bombs = 40
+let divs = []
 let bombsPlaced = false
 let gameOver = false
 
@@ -26,18 +26,28 @@ updateBtn.addEventListener("click",()=>{
   
   grid.style.width = `${width}px`
   grid.style.height= `${width}px`
-  width = w
+  width = parseInt(w)
+  bombs = parseInt(b)
+  divs=[]
+  gameOver = false
+  bombsPlaced = false
+  
   createBoard()
+  
 })
 
 startBtn.addEventListener("click",()=>{
-  createBoard()
+  divs=[]
   gameOver = false
+  bombsPlaced = false
+  createBoard()
+  
 })
 
 function createBoard(){
+  
   removeAllChildNodes(grid)
-  bombsPlaced = false
+  
   for(let i=0;i<(width*width);i++){
     const place = document.createElement('div')
     place.setAttribute("num", i)
@@ -69,7 +79,7 @@ function clicked(place){
     }
     else{
       let around = place.getAttribute("neighbors")
-      console.log(around)
+      
       place.innerHTML = around
       if (around=="0"){
         let hold = getNeighbors(place)
@@ -82,13 +92,13 @@ function clicked(place){
       }
     }
   }
-  console.log(grid)
+ 
 }
 
 function placeBombs(place){
    cache = getNeighbors(place)
    cache.add(place)
-   console.log(bombs)
+   
    for(let i=0;i<bombs;i++){
      
      let temp = divs[Math.floor(Math.random()*divs.length)]
@@ -103,15 +113,16 @@ function placeBombs(place){
 }
 
 function getNeighbors(place){
-  const cache = new Set()
-  const num = parseInt(place.getAttribute("num"))
+  let cache = new Set()
+  let num = parseInt(place.getAttribute("num"))
   
   if(num>=width){
     if((num%width)!=0){
+      
       cache.add(divs[num-width-1]) 
       
     }
-
+    
     cache.add(divs[num-width])
     
     if(((num+1)%width)!=0){
@@ -137,6 +148,7 @@ function getNeighbors(place){
       cache.add(divs[num+width+1])
     }
   }
+  console.log(cache)
   return cache
   
   
@@ -155,6 +167,7 @@ function flag(place){
 
 function removeAllChildNodes(parent) {
   while (parent.firstChild) {
+      
       parent.removeChild(parent.firstChild);
   }
 }
@@ -162,10 +175,10 @@ function removeAllChildNodes(parent) {
 function setNumbers(){
   
   for(let i=0;i<divs.length;i++){
-    const curr = divs[i]
+    let curr = divs[i]
     neighbors = getNeighbors(curr)
     count = 0
-    console.log(neighbors)
+    
     neighbors.forEach(neighbor=>{
       if (neighbor.classList.contains("bomb")){
         count+=1
