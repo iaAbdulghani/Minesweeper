@@ -5,9 +5,19 @@ const updateBtn = document.getElementById('update')
 const grid = document.getElementById('grid')
 let width = 20
 let bombs = 40
+let cleared = 0
 let divs = []
 let bombsPlaced = false
 let gameOver = false
+let timerVariable = setInterval(countUpTimer, 1000);
+const time = document.getElementById("time")
+let increaseTime = false
+
+function countUpTimer() {
+  if(increaseTime){
+  time.innerHTML = parseInt(time.innerHTML)+1
+  }
+}
 
 updateBtn.addEventListener("click",()=>{
   let w = (widthForm.value)
@@ -40,6 +50,7 @@ startBtn.addEventListener("click",()=>{
   divs=[]
   gameOver = false
   bombsPlaced = false
+  cleared = 0
   createBoard()
   
 })
@@ -67,17 +78,28 @@ function clicked(place){
   if(gameOver){
     return
   }
+
   if (bombsPlaced==false){
     placeBombs(place)
+    increaseTime = true
+    time.innerHTML = 0
     bombsPlaced = true
     setNumbers()
   }
   if(place.innerHTML!="🚩"){
     if(place.classList.contains("bomb")){
       alert("Game Over")
+      increaseTime = false
       gameOver = true
     }
     else{
+      cleared = cleared+1
+      if(cleared===(width*width-bombs)){
+        gameOver = true
+        alert("You win!")
+        increaseTime = false
+        return
+      }
       let around = place.getAttribute("neighbors")
       
       place.innerHTML = around
@@ -92,6 +114,7 @@ function clicked(place){
       }
     }
   }
+ 
  
 }
 
@@ -148,9 +171,8 @@ function getNeighbors(place){
       cache.add(divs[num+width+1])
     }
   }
-  console.log(cache)
-  return cache
   
+  return cache
   
 
 }
