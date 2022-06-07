@@ -56,7 +56,8 @@ startBtn.addEventListener("click",()=>{
 })
 
 function createBoard(){
-  
+  time.innerHTML = 0
+  increaseTime = false
   removeAllChildNodes(grid)
   
   for(let i=0;i<(width*width);i++){
